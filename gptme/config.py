@@ -86,8 +86,14 @@ def _load_config() -> Config:
     assert "env" in config, "env key missing in config"
     prompt = config.pop("prompt")
     env = config.pop("env")
-    if shutil.which("gptme-rag") is not None:
+    # handle rag config check
+    if "rag" in config:
         config.pop("rag")
+        if shutil.which("gptme-rag") is None:
+            logger.warning(f"gptme-rag configured but not installed, see https://gptme.org/docs/tools.html#rag to install it")
+    else:
+        if shutil.which("gptme-rag") is not None:
+            logger.warning(f"gptme-rag installed but not configured, see https://gptme.org/docs/tools.html#rag to enable it")
     if config:
         logger.warning(f"Unknown keys in config: {config.keys()}")
     return Config(prompt=prompt, env=env)
