@@ -88,9 +88,9 @@ def _load_config() -> Config:
     env = config.pop("env")
     # handle rag config check
     if "rag" in config:
-        config.pop("rag")
-        if shutil.which("gptme-rag") is None:
-            logger.warning(f"gptme-rag configured but not installed, see https://gptme.org/docs/tools.html#rag to install it")
+        rag=config.pop("rag")
+        if shutil.which("gptme-rag") is None and rag:
+            logger.warning(f"gptme-rag enabled but not installed, see https://gptme.org/docs/tools.html#rag to install it")
     else:
         if shutil.which("gptme-rag") is not None:
             logger.warning(f"gptme-rag installed but not configured, see https://gptme.org/docs/tools.html#rag to enable it")
