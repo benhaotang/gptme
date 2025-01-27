@@ -3,6 +3,7 @@ import os
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
+import shutil
 
 import tomlkit
 from tomlkit import TOMLDocument
@@ -85,6 +86,8 @@ def _load_config() -> Config:
     assert "env" in config, "env key missing in config"
     prompt = config.pop("prompt")
     env = config.pop("env")
+    if shutil.which("gptme-rag") is not None:
+        config.pop("rag")
     if config:
         logger.warning(f"Unknown keys in config: {config.keys()}")
     return Config(prompt=prompt, env=env)
